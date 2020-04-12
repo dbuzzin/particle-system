@@ -1,0 +1,32 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+}
+
+.controls__title {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.controls__mode {
+    display: flex;
+}
+
+.controls__radio {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hidden {
+    display: none;
+}
