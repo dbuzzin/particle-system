@@ -7,6 +7,7 @@ const defaultOptions = {
     spread: 100,
     interval: 5,
     particleSize: 5,
+    particleShape: "ellipse",
     mode: "random",
 }
 
@@ -19,13 +20,15 @@ const ParticleSystem = (function(window) {
         this.spread = options.spread;
         this.interval = options.interval;
         this.particleSize = options.particleSize;
+        this.particleShape = options.particleShape;
         this.context;
         this.particles = [];
     };
 
-    function Particle(x, y) {
+    function Particle(x, y, size) {
         this.startPosition = new Vector2D(x, y);
         this.lastPosition = this.startPosition;
+        this.size = size;
         this.direction;
         this.spawnTime = Date.now();
     };
@@ -43,7 +46,7 @@ const ParticleSystem = (function(window) {
     ParticleEngine.prototype.draw = function(x, y) {
         const _pEngine = this instanceof ParticleEngine ? this : pEngine;
         const ctx = _pEngine.context;
-        const p = new Particle(x, y, 30, 30)
+        const p = new Particle(x, y, _pEngine.particleSize);
 
         switch (_pEngine.mode) {
             case "random":
@@ -60,9 +63,20 @@ const ParticleSystem = (function(window) {
 
         _pEngine.particles.forEach(particle => {
             ctx.save();
-            ctx.beginPath();
-            ctx.arc(particle.lastPosition.x, particle.lastPosition.y, _pEngine.particleSize, 0, 2 * Math.PI);
-            ctx.fill();
+            
+            switch (_pEngine.particleShape) {
+                case "ellipse":
+                    ctx.beginPath();
+                    ctx.arc(particle.lastPosition.x, particle.lastPosition.y, particle.size, 0, 2 * Math.PI);
+                    ctx.fill();
+                    break;
+                case "square":
+                    ctx.beginPath();
+                    ctx.fillRect(particle.lastPosition.x, particle.lastPosition.y, particle.size, particle.size);
+                    ctx.fill();
+                    break;
+            }
+
             ctx.restore();
         });
     }
