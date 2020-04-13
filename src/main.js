@@ -1,13 +1,12 @@
 import ParticleSystem from "./lib/ParticleSystem.js";
 
 const context = document.querySelector("#canvas").getContext("2d");
+const controlSize = document.querySelector("#controlSize");
 const controlMax = document.querySelector("#controlMax");
 const controlSpeed = document.querySelector("#controlSpeed");
 const controlSpread = document.querySelector("#controlSpread");
 const controlMode = document.querySelector("#controlMode");
 const controlInterval = document.querySelector("#controlInterval");
-
-console.log(controlSpeed.value);
 
 function update() {
 
@@ -22,6 +21,7 @@ function update() {
         mode: controlMode.value,
         max: parseInt(controlMax.value),
         interval: parseInt(controlInterval.value),
+        particleSize: parseInt(controlSize.value),
         speed: parseInt(controlSpeed.value),
         spread: parseInt(controlSpread.value)
     });

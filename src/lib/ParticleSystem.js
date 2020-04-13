@@ -1,11 +1,12 @@
 import { Vector2D } from "./MathFunctions.js";
-import mode from "./mode.js" 
+import Mode from "./Mode.js" 
 
 const defaultOptions = {
-    max: 100,
+    max: 200,
     speed: 60,
     spread: 100,
     interval: 5,
+    particleSize: 5,
     mode: "random",
 }
 
@@ -16,17 +17,16 @@ const ParticleSystem = (function(window) {
         this.mode = options.mode;
         this.speed = options.speed;
         this.spread = options.spread;
-        this.interval = options.interval
+        this.interval = options.interval;
+        this.particleSize = options.particleSize;
         this.context;
         this.particles = [];
     };
 
-    function Particle(x, y, width, height) {
+    function Particle(x, y) {
         this.startPosition = new Vector2D(x, y);
         this.lastPosition = this.startPosition;
         this.direction;
-        this.width = width;
-        this.height = height;
         this.spawnTime = Date.now();
     };
 
@@ -43,14 +43,14 @@ const ParticleSystem = (function(window) {
     ParticleEngine.prototype.draw = function(x, y) {
         const _pEngine = this instanceof ParticleEngine ? this : pEngine;
         const ctx = _pEngine.context;
-        const p = new Particle(x, y, 10, 10)
+        const p = new Particle(x, y, 30, 30)
 
         switch (_pEngine.mode) {
             case "random":
-                p.direction = mode.randomFire();
+                p.direction = Mode.randomFire();
                 break;
             case "radial":
-                p.direction = mode.radialFire(_pEngine.interval);
+                p.direction = Mode.radialFire(_pEngine.interval);
                 break;
         }
 
@@ -61,7 +61,7 @@ const ParticleSystem = (function(window) {
         _pEngine.particles.forEach(particle => {
             ctx.save();
             ctx.beginPath();
-            ctx.arc(particle.lastPosition.x, particle.lastPosition.y, particle.width / 2, 0, 2 * Math.PI);
+            ctx.arc(particle.lastPosition.x, particle.lastPosition.y, _pEngine.particleSize, 0, 2 * Math.PI);
             ctx.fill();
             ctx.restore();
         });
@@ -76,13 +76,12 @@ const ParticleSystem = (function(window) {
             const dist = Vector2D.distance(particle.startPosition, currentPosition);
 
             currentPosition.add(velocity);
-
             
-            particle.lastPosition = currentPosition;
-
             if (dist >= _pEngine.spread) {
                 _pEngine.particles.splice(_pEngine.particles.indexOf(particle), 1);
             }
+            
+            particle.lastPosition = currentPosition;
         })
     }
 
