@@ -15,6 +15,13 @@ Vector2D.distance = function(v1, v2) {
     return Math.hypot(v2.x - v1.x, v2.y - v1.y);
 }
 
+Vector2D.multiply = function(v1, v2) {
+    if (v2 instanceof Vector2D) {
+        return new Vector2D(v1.x * v2.x, v1.y * v2.y);
+    }
+    return new Vector2D(v1.x * v2, v1.y * v2);
+}
+
 Vector2D.prototype.add = function(v) {
     this.x += v.x;
     this.y += v.y;
@@ -32,6 +39,12 @@ Vector2D.prototype.divide = function(v) {
             this.y /= v;
         }
     }
+    return this;
+}
+
+Vector2D.prototype.multiply = function(amt) {
+    this.x = (this.x * amt);
+    this.y = (this.y * amt);
     return this;
 }
 

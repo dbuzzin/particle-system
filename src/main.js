@@ -9,7 +9,7 @@ const controlSpread = document.querySelector("#controlSpread");
 const controlMode = document.querySelector("#controlMode");
 const controlInterval = document.querySelector("#controlInterval");
 const controlForceOn = document.querySelector("#controlForceOn");
-const controlMagnitude = document.querySelector("#controlMagnitude");
+const controlDensity = document.querySelector("#controlDensity");
 const helpContainer = document.querySelector("#helpContainer");
 
 const mouseState = {
@@ -29,6 +29,8 @@ canvas.addEventListener("mouseleave", () => mouseState.active = false);
 
 function update() {
 
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
     if (controlMode.value === "radial") {
         controlInterval.parentNode.classList.remove("hidden");
     }
@@ -37,15 +39,15 @@ function update() {
     }
     if (parseInt(controlForceOn.value) === 2) {
 
-        controlMagnitude.parentNode.classList.remove("hidden");
+        controlDensity.parentNode.classList.remove("hidden");
         helpContainer.classList.remove("hidden");
 
         if (mouseState.active) {
-            pEngine.applyForce(mouseState.x, mouseState.y, controlMagnitude.value);
+            pEngine.applyForce(mouseState.x, mouseState.y, controlDensity.value);
         }
     }
     else {
-        controlMagnitude.parentNode.classList.add("hidden");
+        controlDensity.parentNode.classList.add("hidden");
         helpContainer.classList.add("hidden");
 
     }
@@ -59,9 +61,6 @@ function update() {
         speed: parseInt(controlSpeed.value),
         spread: parseInt(controlSpread.value),
     });
-
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-
 
     pEngine.draw(context.canvas.width / 2, context.canvas.height / 2);
     pEngine.update();

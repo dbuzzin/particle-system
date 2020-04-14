@@ -104,10 +104,10 @@ const ParticleSystem = (function(window) {
 
         _pEngine.particles.forEach(particle => {
             const currentPosition = new Vector2D(particle.lastPosition.x, particle.lastPosition.y);
-            const velocity = new Vector2D(particle.velocity.x * _pEngine.speed * deltaTime, particle.velocity.y * _pEngine.speed * deltaTime);
+            const moveAmount = Vector2D.multiply(particle.velocity, _pEngine.speed * deltaTime);
             const dist = Vector2D.distance(particle.startPosition, currentPosition);
 
-            currentPosition.add(velocity);
+            currentPosition.add(moveAmount);
             
             if (dist >= _pEngine.spread) {
                 _pEngine.particles.splice(_pEngine.particles.indexOf(particle), 1);
@@ -117,16 +117,16 @@ const ParticleSystem = (function(window) {
         })
     }
 
-    ParticleEngine.prototype.applyForce = function(x, y, magnitude) {
+    ParticleEngine.prototype.applyForce = function(x, y, magnitude, deltaTime = 1/60) {
         const _pEngine = this instanceof ParticleEngine ? this : pEngine;
 
         _pEngine.particles.forEach(particle => {
             const dist = Vector2D.distance(new Vector2D(x, y), particle.lastPosition);
             const angle = Vector2D.getAngle(new Vector2D(x, y), particle.lastPosition);
+            const direction = Vector2D.fromAngle(angle);
+            const force = direction.multiply(magnitude / dist);
 
-            const force = Vector2D.fromAngle(angle);
-
-            particle.velocity.add(force.divide(dist / magnitude));
+            particle.velocity.add(force.multiply(deltaTime));
         });
     }
 
