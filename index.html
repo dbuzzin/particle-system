@@ -16,30 +16,47 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div class="wrapper">
-            <canvas width="700" height="700" id="canvas"></canvas>
-            <div class="controls">
-                <div class="controls__title">Particle Size</div>
-                <input type="range" min="1" max="30" value="5" id="controlSize">
-                <div class="controls__title">Particle Shape</div>
-                <select id="controlShape">
-                    <option value="ellipse">Ellipse</option>
-                    <option value="square">Square</option>
-                </select>
-                <div class="controls__title">Max</div>
-                <input type="range" min="1" max="2500" value="200" id="controlMax">
-                <div class="controls__title">Speed</div>
-                <input type="range" min="1" max="100" value="60" id="controlSpeed">
-                <div class="controls__title">Spread</div>
-                <input type="range" min="10" max="300" value="150" id="controlSpread">
-                <div class="hidden">
-                    <div class="controls__title">Interval</div>
-                    <input type="range" min="1" max="20" value="5" id="controlInterval">
+            <div class="main-container">
+                <div>
+                    <canvas width="700" height="700" id="canvas"></canvas>
+                    <div class="help-container hidden" id="helpContainer">
+                        <h3>Moving the mouse over the canvas will apply a push force to the particles.</h3>
+                    </div>
                 </div>
-                <div class="controls__title">Mode</div>
-                <select id="controlMode">
-                    <option value="random">Random</option>
-                    <option value="radial">Radial</option>
-                </select>
+                <div class="controls">
+                    <div class="controls__title">Particle Size</div>
+                    <input type="range" min="1" max="30" value="5" id="controlSize">
+                    <div class="controls__title">Particle Shape</div>
+                    <select id="controlShape">
+                        <option value="ellipse">Ellipse</option>
+                        <option value="square">Square</option>
+                    </select>
+                    <div class="controls__title">Max</div>
+                    <input type="range" min="1" max="2500" value="450" id="controlMax">
+                    <div class="controls__title">Speed</div>
+                    <input type="range" min="1" max="100" value="40" id="controlSpeed">
+                    <div class="controls__title">Spread</div>
+                    <input type="range" min="10" max="300" value="300" id="controlSpread">
+                    <div class="controls__title">Mode</div>
+                    <select id="controlMode">
+                        <option value="random">Random</option>
+                        <option value="radial">Radial</option>
+                    </select>
+                    <div class="hidden">
+                        <div class="controls__title">Interval</div>
+                        <input type="range" min="1" max="20" value="5" id="controlInterval">
+                    </div>
+                    <div class="controls__title">Apply Force</div>
+                    <input type="range" min="1" max="2" value="1" id="controlForceOn">
+                    <div class="controls__force-labels">
+                        <span>Off</span>
+                        <span>On</span>
+                    </div>
+                    <div class="hidden">
+                        <div class="controls__title">Magnitude</div>
+                        <input type="range" min="1" max="50" value="10" id="controlMagnitude">
+                    </div>
+                </div>
             </div>
         </div>
         

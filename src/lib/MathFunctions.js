@@ -1,10 +1,14 @@
-export function Vector2D(x, y) {
+function Vector2D(x, y) {
     this.x = x;
     this.y = y;
 }
 
 Vector2D.fromAngle = function(radians) {
     return new Vector2D(Math.cos(radians), Math.sin(radians));
+}
+
+Vector2D.getAngle = function(v1, v2) {
+    return Math.atan2(v2.y - v1.y, v2.x - v1.x);
 }
 
 Vector2D.distance = function(v1, v2) {
@@ -41,6 +45,10 @@ Vector2D.prototype.normalize = function() {
     return this;
 }
 
+Vector2D.prototype.getDirection = function() {
+    return Math.atan2(this.y, this.x);
+}
+
 export function random(type = "int", ...values) {
     if(values.length === 2) {
         if (type === "float" && values[0] < 0) {
@@ -59,3 +67,5 @@ export function radians(angle) {
 export function getRandomVelocity() {
     return Math.random() * (1 - -1 + 1) + -1;
 }
+
+export { Vector2D };

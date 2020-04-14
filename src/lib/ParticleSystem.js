@@ -2,9 +2,9 @@ import { Vector2D } from "./MathFunctions.js";
 import Mode from "./Mode.js" 
 
 const defaultOptions = {
-    max: 200,
-    speed: 60,
-    spread: 100,
+    max: 450,
+    speed: 40,
+    spread: 300,
     interval: 5,
     particleSize: 5,
     particleShape: "ellipse",
@@ -12,6 +12,12 @@ const defaultOptions = {
 }
 
 const ParticleSystem = (function(window) {
+
+    /**
+     * Constructor for the base particle system.
+     * 
+     * @param {Object} options - User defined options to change the behaviour of the particles 
+     */
 
     function ParticleEngine(options = defaultOptions) {
         this.max = options.max;
@@ -25,13 +31,12 @@ const ParticleSystem = (function(window) {
         this.particles = [];
     };
 
-    function Particle(x, y, size) {
-        this.startPosition = new Vector2D(x, y);
-        this.lastPosition = this.startPosition;
-        this.size = size;
-        this.direction;
-        this.spawnTime = Date.now();
-    };
+    /**
+     * Setup method for the base particle system.
+     * 
+     * @param {Object} context
+     * @param {Object} options
+     */
 
     ParticleEngine.prototype.setup = function(context, options = {}) {
         const _pEngine = this instanceof ParticleEngine ? this : pEngine;
@@ -43,6 +48,13 @@ const ParticleSystem = (function(window) {
         return _pEngine;
     }
 
+    /**
+     * Adds new particles to the particle array and draws to the screen.
+     * 
+     * @param {number} x
+     * @param {number} y
+     */
+
     ParticleEngine.prototype.draw = function(x, y) {
         const _pEngine = this instanceof ParticleEngine ? this : pEngine;
         const ctx = _pEngine.context;
@@ -50,10 +62,10 @@ const ParticleSystem = (function(window) {
 
         switch (_pEngine.mode) {
             case "random":
-                p.direction = Mode.randomFire();
+                p.velocity = Mode.randomFire();
                 break;
             case "radial":
-                p.direction = Mode.radialFire(_pEngine.interval);
+                p.velocity = Mode.radialFire(_pEngine.interval);
                 break;
         }
 
@@ -81,12 +93,18 @@ const ParticleSystem = (function(window) {
         });
     }
 
+    /**
+     * Updates each particles position on the screen and removes them once they're reached their limit.
+     * 
+     * @param {number} deltaTime - 1/60 by default. 
+     */
+
     ParticleEngine.prototype.update = function(deltaTime = 1/60) {
         const _pEngine = this instanceof ParticleEngine ? this : pEngine;
 
         _pEngine.particles.forEach(particle => {
             const currentPosition = new Vector2D(particle.lastPosition.x, particle.lastPosition.y);
-            const velocity = new Vector2D(particle.direction.x * _pEngine.speed * deltaTime, particle.direction.y * _pEngine.speed * deltaTime);
+            const velocity = new Vector2D(particle.velocity.x * _pEngine.speed * deltaTime, particle.velocity.y * _pEngine.speed * deltaTime);
             const dist = Vector2D.distance(particle.startPosition, currentPosition);
 
             currentPosition.add(velocity);
@@ -98,6 +116,35 @@ const ParticleSystem = (function(window) {
             particle.lastPosition = currentPosition;
         })
     }
+
+    ParticleEngine.prototype.applyForce = function(x, y, magnitude) {
+        const _pEngine = this instanceof ParticleEngine ? this : pEngine;
+
+        _pEngine.particles.forEach(particle => {
+            const dist = Vector2D.distance(new Vector2D(x, y), particle.lastPosition);
+            const angle = Vector2D.getAngle(new Vector2D(x, y), particle.lastPosition);
+
+            const force = Vector2D.fromAngle(angle);
+
+            particle.velocity.add(force.divide(dist / magnitude));
+        });
+    }
+
+    /**
+     * Constructor for each individual particle.
+     * 
+     * @param {number} x - The x position of the centre point of the particles.
+     * @param {number} y - The y position of the centre point of the particles.
+     * @param {number} size - The size in pixels of the particles.
+     */
+
+    function Particle(x, y, size) {
+        this.startPosition = new Vector2D(x, y);
+        this.lastPosition = this.startPosition;
+        this.size = size;
+        this.velocity;
+        this.spawnTime = Date.now();
+    };
 
     return window.pEngine = new ParticleEngine();
 
